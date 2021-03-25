@@ -1,0 +1,481 @@
+unit Head;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, Menus, ComCtrls, StdCtrls, ExtCtrls, XPMan, Grids,
+  StdActns, ActnList, ExtActns, Printers, ImgList, ToolWin, Buttons;
+
+type
+  TForm1 = class(TForm)
+    MainMenu1: TMainMenu;
+    StatusBar1: TStatusBar;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
+    N16: TMenuItem;
+    N17: TMenuItem;
+    N18: TMenuItem;
+    N19: TMenuItem;
+    N20: TMenuItem;
+    N21: TMenuItem;
+    N22: TMenuItem;
+    N23: TMenuItem;
+    N24: TMenuItem;
+    N25: TMenuItem;
+    N26: TMenuItem;
+    N27: TMenuItem;
+    N28: TMenuItem;
+    N29: TMenuItem;
+    N30: TMenuItem;
+    N31: TMenuItem;
+    N34: TMenuItem;
+    Timer1: TTimer;
+    XPManifest1: TXPManifest;
+    FontDialog1: TFontDialog;
+    PrintDialog1: TPrintDialog;
+    SaveDialog1: TSaveDialog;
+    FindDialog1: TFindDialog;
+    ReplaceDialog1: TReplaceDialog;
+    PageSetupDialog1: TPageSetupDialog;
+    OpenDialog1: TOpenDialog;
+    ActionList1: TActionList;
+    EditUndo1: TEditUndo;
+    EditCut1: TEditCut;
+    EditCopy1: TEditCopy;
+    EditPaste1: TEditPaste;
+    EditDelete1: TEditDelete;
+    EditSelectAll1: TEditSelectAll;
+    FileExit1: TFileExit;
+    SearchFind1: TSearchFind;
+    SearchFindNext1: TSearchFindNext;
+    SearchReplace1: TSearchReplace;
+    ImageList1: TImageList;
+    ControlBar1: TControlBar;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
+    BitBtn7: TBitBtn;
+    BitBtn8: TBitBtn;
+    PageSetupDialog2: TPageSetupDialog;
+    CBName: TComboBox;
+    ComboBox1: TComboBox;
+    ComboBox2: TComboBox;
+    ColorDialog1: TColorDialog;
+    fgg: TRichEdit;
+    procedure Timer1Timer(Sender: TObject);
+    procedure N31Click(Sender: TObject);
+    procedure N28Click(Sender: TObject);
+    procedure N27Click(Sender: TObject);
+    procedure FontDialog1Apply(Sender: TObject; Wnd: HWND);
+    procedure FormActivate(Sender: TObject);
+    procedure N2Click(Sender: TObject);
+    procedure New;
+    procedure SaveFile;
+    procedure SaveToFile(w:string);
+    procedure SaveDialog1CanClose(Sender: TObject; var CanClose: Boolean);
+    procedure N4Click(Sender: TObject);
+    procedure N5Click(Sender: TObject);
+    procedure N3Click(Sender: TObject);
+    procedure OpenDialog1CanClose(Sender: TObject; var CanClose: Boolean);
+    procedure N7Click(Sender: TObject);
+    procedure N8Click(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure N25Click(Sender: TObject);
+    procedure N22Click(Sender: TObject);
+    procedure N34Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
+    procedure BitBtn8Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure CBNameChange(Sender: TObject);
+    procedure N12Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure ComboBox2Change(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    name,s:string;
+    open,save,yes:boolean;
+  end;
+
+var
+  Form1: TForm1;
+
+    gg:boolean;
+implementation
+
+uses Warning, Transition, About;
+
+{$R *.dfm}
+
+procedure TForm1.SaveToFile(w:string);
+var k,i:integer;
+    pp:boolean;
+
+begin
+  try
+    k:=1;
+    pp:=false;
+    for i:=length(w) downto 1 do
+    if (w[i]='\') then
+    begin
+      k:=i+1;
+      break;
+    end;
+    w:=copy(w,k,length(w)-k+1);
+    k:=length(w);
+    for i:=length(w) downto 1 do
+    if (w[i]='.') then
+    begin
+      k:=i-1;
+      pp:=true;
+      break;
+    end;
+    if ((not pp) and (SaveDialog1.FilterIndex=1)) then  RichEdit1.Lines.SaveToFile(w+'.txt')
+    else  RichEdit1.Lines.SaveToFile(w);
+    name:=copy(w,1,k);
+    Caption:=name+' - Блокнот';
+    s:= RichEdit1.Text;
+    open:=false;
+    SaveDialog1.FileName:=w;
+    save:=true;
+    yes:=true;
+  except on Exception do ShowMessage('XATO!!!');
+  end;
+end;
+
+
+procedure TForm1.SaveFile;
+begin
+  if (open) then
+  begin
+    SaveToFile(OpenDialog1.FileName);
+  end
+  else
+    if (save) then
+    begin
+      SaveToFile(SaveDialog1.FileName);
+    end
+    else
+        SaveDialog1.Execute;
+end;
+//berilgan intervalda kursor  RichEdit1ni qaysi satri va ustunida ekanligini aniqlab turadi
+procedure TForm1.Timer1Timer(Sender: TObject);
+var x,y:integer;
+begin
+  if (SendMessage( RichEdit1.Handle,EM_LINEFROMCHAR,-1,0)+1<1) then x:=1
+  else x:=SendMessage( RichEdit1.Handle,EM_LINEFROMCHAR,-1,0)+1;
+  if (LoWord(SendMessage( RichEdit1.Handle,EM_GETSEL,0,0)) - SendMessage( RichEdit1.Handle,EM_LINEINDEX,-1,0)+1<1) then y:=1
+  else y:=LoWord(SendMessage( RichEdit1.Handle,EM_GETSEL,0,0)) - SendMessage( RichEdit1.Handle,EM_LINEINDEX,-1,0)+1;
+  StatusBar1.Panels.Items[1].Text:='Стр '+floattostr(x)+', стлб '+floattostr(y);
+end;
+
+procedure TForm1.N31Click(Sender: TObject);
+begin
+  if (not StatusBar1.Visible) then
+  StatusBar1.Visible:=true
+  else StatusBar1.Visible:=false;
+end;
+
+procedure TForm1.N28Click(Sender: TObject);
+begin
+  FontDialog1.Execute;
+   RichEdit1.Font:=FontDialog1.Font;
+end;
+
+procedure TForm1.N27Click(Sender: TObject);
+begin
+  if ( RichEdit1.ScrollBars=ssBoth) then
+   RichEdit1.ScrollBars:=ssVertical
+  else  RichEdit1.ScrollBars:=ssBoth;
+end;
+
+procedure TForm1.FontDialog1Apply(Sender: TObject; Wnd: HWND);
+begin
+   RichEdit1.Font:=FontDialog1.Font;
+end;
+
+procedure TForm1.New;
+begin
+  name:=' taxriri';
+   RichEdit1.Text:='';
+  s:= RichEdit1.Text;
+  Caption:=name+' - Matn';
+  open:=false;
+  save:=false;
+  yes:=false;
+end;
+
+procedure TForm1.FormActivate(Sender: TObject);
+begin
+  New;
+end;
+
+procedure TForm1.N2Click(Sender: TObject);
+begin
+  if (s<> RichEdit1.Text) then Form2.ShowModal
+  else New;
+  if (yes) then
+  begin
+    yes:=false;
+    New;
+  end;
+end;
+
+procedure TForm1.SaveDialog1CanClose(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  SaveToFile(SaveDialog1.FileName);
+end;
+
+procedure TForm1.N4Click(Sender: TObject);
+var
+  ww:TextFile;
+  b:string;
+begin
+ if SaveDialog1.Execute then
+ b:=SaveDialog1.FileName;
+   AssignFile(ww,b);
+   Rewrite(ww);
+   writeln(ww,(richedit1.Text))
+end;
+
+procedure TForm1.N5Click(Sender: TObject);
+begin
+  SaveDialog1.Execute;
+  yes:=false;
+end;
+
+procedure TForm1.N3Click(Sender: TObject);
+
+begin
+if (s<> RichEdit1.Text) then Form2.ShowModal
+  else OpenDialog1.Execute;
+  if (yes) then
+  begin
+    yes:=false;
+    OpenDialog1.Execute;
+  end;
+end;
+
+procedure TForm1.OpenDialog1CanClose(Sender: TObject;
+  var CanClose: Boolean);
+var w:string;k,i:integer;
+begin
+  try
+    w:=OpenDialog1.FileName;
+     RichEdit1.Lines.LoadFromFile(w);
+    k:=1;
+    for i:=length(w) downto 1 do
+    if (w[i]='\') then
+    begin
+      k:=i+1;
+      break;
+    end;
+    w:=copy(w,k,length(w)-k+1);
+    k:=length(w);
+    for i:=length(w) downto 1 do
+    if (w[i]='.') then
+    begin
+      k:=i-1;
+      break;
+    end;
+    name:=copy(w,1,k);
+    Caption:=name+' - Matn';
+    s:= RichEdit1.Text;
+    open:=true;
+    save:=false;
+  except on Exception do ShowMessage('Xato!!!');
+  end;
+end;
+
+procedure TForm1.N7Click(Sender: TObject);
+begin
+  PageSetupDialog1.Execute;
+end;
+
+procedure PrintStrings(Strings: TStrings);
+var
+  Prn: TextFile;
+  i: word;
+begin
+  AssignPrn(Prn);
+  try
+    Rewrite(Prn);
+    try
+      if (Strings.Text<>'') then
+      for i:=0 to Strings.Count-1 do
+        writeln(Prn,Strings.Strings[i]);
+    finally
+      CloseFile(Prn);
+    end;
+  except
+    on EInOutError do
+      MessageDlg('Matnni chop qilishda xatolik!!', mtError, [mbOk], 0);
+  end;
+end;
+
+procedure TForm1.N8Click(Sender: TObject);
+begin
+  if PrintDialog1.Execute then
+  begin
+    Printer.Title:=name;
+    Printer.Canvas.Font:= RichEdit1.Font;
+    PrintStrings( RichEdit1.Lines);
+  end;
+end;
+
+procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  CanClose:=false;
+  if (s<> RichEdit1.Text) then Form2.Show
+  else CanClose:=true;
+  if (yes) then
+  begin
+    yes:=false;
+    CanClose:=true;
+  end;
+end;
+
+procedure TForm1.N25Click(Sender: TObject);
+begin
+   RichEdit1.SelText:=Copy(TimeToStr(Time),1,length(TimeToStr(Time))-3)+' '+DateToStr(Date);
+end;
+
+procedure TForm1.N22Click(Sender: TObject);
+begin
+   Form3.ShowModal;
+end;
+
+procedure TForm1.N34Click(Sender: TObject);
+begin
+  Form5.ShowModal;
+end;
+
+procedure TForm1.BitBtn1Click(Sender: TObject);
+begin
+ RichEdit1.Paragraph.Alignment:=taLeftJustify;
+end;
+
+procedure TForm1.BitBtn2Click(Sender: TObject);
+begin
+ RichEdit1.Paragraph.Alignment:=taCenter;
+end;
+
+procedure TForm1.BitBtn3Click(Sender: TObject);
+begin
+    RichEdit1.Paragraph.Alignment:=taRightJustify;
+end;
+
+procedure TForm1.BitBtn4Click(Sender: TObject);
+begin
+if (s<> RichEdit1.Text) then Form2.ShowModal
+  else OpenDialog1.Execute;
+  if (yes) then
+  begin
+    yes:=false;
+    OpenDialog1.Execute;
+  end;
+end;
+
+procedure TForm1.BitBtn5Click(Sender: TObject);
+begin
+  SaveFile;
+  yes:=false;
+end;
+
+procedure TForm1.BitBtn7Click(Sender: TObject);
+begin
+ if PrintDialog1.Execute then
+  begin
+    Printer.Title:=name;
+    Printer.Canvas.Font:= RichEdit1.Font;
+    PrintStrings( RichEdit1.Lines);
+  end;
+end;
+
+procedure TForm1.BitBtn8Click(Sender: TObject);
+begin
+ColorDialog1.Execute;
+   RichEdit1.Color:=ColorDialog1.Color;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var
+i:integer;
+begin
+gg:=true;
+for i := 0 to Screen.Fonts.Count - 1 do
+   CBName.Items.Add(Screen.Fonts[i]);
+    RichEdit1.Font.Name := CBName.Items[CBName.ItemIndex];
+
+end;
+
+procedure TForm1.CBNameChange(Sender: TObject);
+begin
+ RichEdit1.Font.Name := CBName.Items[CBName.ItemIndex];
+
+end;
+
+procedure TForm1.N12Click(Sender: TObject);
+begin
+ { FontDialog1.Font.Assign( RichEdit1.Font);
+ if (FontDialog1.Execute)
+  then begin
+       RichEdit1.Font.Assign(FontDialog1.Font);
+    CBName.Text:= RichEdit1.Font.Name;  end      }
+end;
+
+procedure TForm1.ComboBox1Change(Sender: TObject);
+begin
+     RichEdit1.Font.Size:=StrToInt(ComboBox1.Text);
+ end;
+
+procedure TForm1.ComboBox2Change(Sender: TObject);
+begin
+ if ComboBox2.Text= 'обычный' then
+   RichEdit1.Font.Style:=[ ];
+ if ComboBox2.Text='' then   
+  RichEdit1.Font.Style:=[FsItalic];
+   if ComboBox2.Text='жирный' then
+     RichEdit1.Font.Style:=[FsBold];
+   if ComboBox2.Text='жирный курсив' then
+     RichEdit1.Font.Style:=[FsItalic,FsBold];
+   
+
+
+end;
+
+end.
+
+EditDelete1
+
+EditPaste1
+
+EditSelectAll1
+
+EditUndo1
+EditCut1
+EditCopy1
+FileExit1
+SearchFind1
